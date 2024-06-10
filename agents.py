@@ -2,6 +2,7 @@ from crewai import Agent
 from crewai_tools.tools import WebsiteSearchTool, FileReadTool, DOCXSearchTool, JSONSearchTool
 
 
+
 class Agents():
 	def research_agent(self):
 		return Agent(

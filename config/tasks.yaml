@@ -1,0 +1,85 @@
+tasks:
+  job:
+    description: >
+      Populate a JSON file based on information from the provided job listing.
+
+      Job listing: {job_listing}
+
+    expected_output: >
+      A JSON file with the following format:
+
+      {
+        Full role:
+        Company name:
+        The most important day-to-day challenge for this role:
+        Skill 1:
+        Skill 2:
+        Skill 3:
+      }
+
+  resume:
+    description: >
+      Your task is to extract information from the resume and populate a JSON file.
+
+      Extract the name and overall title of the applicant.
+      Also, extract ALL previous work experiences, including company name, job title,
+      and the word for word description of job duties found in the resume.
+    
+      Resume: {resume}
+    
+    expected_output: >
+      A JSON file with the following format:
+
+      Applicant name:
+      Applicant title:
+      Applicant email:
+      Applicant residence:
+      Applicant portfolio website:
+      Applicant github:
+
+      Previous work experience:
+      [
+        {
+          "company": "",
+          "title": "",
+          "responsibilities": ""
+        },
+        # ... more work experiences as needed
+      ]
+
+  hook:
+    description: >
+      Using the provided job summary and resume details, write a compelling opening paragraph (hook) for the cover letter. The hook should:
+      - Be less than 100 words.
+      - Highlight the client's experience and qualifications.
+      - Demonstrate empathy for the most important day-to-day challenge faced in this role. 
+      - Use keywords that will resonate with ATS scans.
+
+    Expected Inputs:
+      resume_details: summary of the applicants resume.
+      job_summary: summary of the job listing.
+
+    expected_output: >
+      An attention-grabbing cover letter hook (less than 100 words) tailored to the most important day-to-day challenge for this role with relevant keywords throughout.
+      Do not include explanations, reasoning, or additional commentary.
+
+
+  body:
+    description: >
+      Based on the provided hook, resume details, and job summary write a cover letter body and conclusion with a strong focus on the company's future needs and how the applicant can fulfill those needs.
+
+      - Output the body as two paragraphs.
+      - Output the conclusion as a single paragraph at the end.
+      - Ensure the entire length is around 250 words.
+      - Focus on required skills from the job summary.
+      - Use relevant and specific accomplishments from the provided resume.
+      - Heavily prioritize unique descriptors and unconventional writing style.
+
+    Expected Inputs:
+      resume_details: summary of the applicants resume.
+      job_summary: summary of the job listing.
+      hook: finalized cover letter hook.
+
+    expected_output: >
+      A cover letter body and conclusion with a strong focus on the company's future needs and how the applicant can fulfill those needs.
+      Do not include explanations, reasoning, or additional commentary.
