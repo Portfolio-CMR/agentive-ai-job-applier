@@ -1,0 +1,36 @@
+Summary of the Data Analyst job at Doximity
+Doximity is hiring a Data Analyst with 0 - 3 years of experience. Based in United States - Remote and with Remote ways of working. The expected salary range for this role is $110,000 - $150,000
+About Doximity
+Founded in 2010, Doximity is the leading digital platform for medical professionals. The company’s network members include over 80% of U.S. physicians across all specialties and practice areas. Doximity provides its verified clinical membership with digital tools built for medicine, enabling them to collaborate with colleagues, stay up to date with the latest medical news and research, manage their careers and conduct virtual patient visits. Doximity’s mission is to help doctors be more productive so they can provide better healthcare for their patients.
+
+Data Analyst job description
+This role can be filled in our San Francisco headquarters OR remotely in the U.S.
+
+As a Data Analyst on our Ads team, you'll work alongside other data analysts, data engineers, analytics managers and product managers owning:
+
+Prioritization, scheduling, and pacing of sponsored content to ensure uniform distribution of user engagement across Doximity products based on campaign goals, guarantees, and user bidding.
+Pricing calculations, user funnel analyses, demand & supply projections, and inventory simulations to design and recommend appropriate audiences for campaigns.
+Building and maintaining ETL pipelines to ensure a single source of business rules, reliable data governance, and dependable user activity tracking for client and commercial reporting.
+Data Analyst job requirements
+About you
+
+At least 2 years of professional experience as a data analyst or a data scientist.
+Proven record of delivering high quality exploratory data analyses (EDA) in a professional setting that informed critical product and business decisions.
+Deep knowledge of descriptive and prescriptive analytics, probability distributions, hypothesis testing, and Bayesian and statistical modeling.
+Mastery of visualization techniques and verbal and written storytelling skills.
+Excellent SQL skills to create and evaluate complex statements involving numerous tables and data relationships.
+Proficient in using Python data analysis libraries such as Pandas and NumPy. Also has a basic understanding of object-oriented programming concepts as they relate to Python.
+Prior exposure to distributed data processing concepts and execution (e.g., working with column stores, leveraging spark, etc.)
+Fast learner; curiosity about and passion for data.
+What we offer at Doximity
+About Us
+
+Here are some of the ways we bring value to doctors
+Here is an introduction to our tech stack
+We use UNIX command-line interface and standard programming tools (vim/emacs, git, etc.) and have over 350 private repositories in GitHub containing our applications, forks of gems, our own internal gems, and open-source projects
+We have worked as a distributed team for a long time; we're currently about 65% distributed
+Find out more information on the Doximity engineering blog
+Our company core values
+Our recruiting process
+Our product development cycle
+Our on-boarding & mentorship process
