@@ -25,7 +25,7 @@ def run():
         'job_listing': job_listing,
         'resume': resume
     }
-    CoverLetterCrew().crew(job_listing, resume).kickoff()
+    CoverLetterCrew().crew().kickoff(inputs=inputs)
 
 if __name__ == "__main__":
     run()

@@ -3,10 +3,10 @@ tasks:
     description: >
       Populate a JSON file based on information from the provided job listing.
 
-      Job listing: {job_listing}
+      job listing: {job_listing}
 
     expected_output: >
-      A JSON file with the following format:
+      A JSON formatted output with the following information:
 
       {
         Full role:
