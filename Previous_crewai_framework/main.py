@@ -4,7 +4,7 @@ load_dotenv()
 
 import docx
 
-from crew import CoverLetterCrew
+from Previous_crewai_framework.crew import CoverLetterCrew
 
 def load_document(file_path):
     if file_path.endswith(".txt"):
