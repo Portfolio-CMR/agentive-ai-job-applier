@@ -137,7 +137,7 @@ else:
 prompt = dedent(f'''
 Using the provided job summary and resume details, write a compelling opening paragraph (hook) for the cover letter. The hook should:
 - Be less than 100 words.
-- Directly address why the candidate is perfect for the most important day-to-day challenge stated in the job summary.
+- Explain why the applicant can succesfully take on the challenges of the job outlined in the job summary.
 - Use keywords that will resonate with ATS scans.
 - Incorporate total years experience from the applicant if it appears in the resume.
 
@@ -170,9 +170,8 @@ prompt = dedent(f'''
 Based on the provided hook, resume details, and job summary write a cover letter body and conclusion with a strong focus on the company's future needs and how the applicant can fulfill those needs.
 
 - Output the body as two paragraphs.
-- For each paragraph, use 1-2 relevant quantifieable metrics from the provided resume that align with the tops skills outlined in the job summary.
-- Explicitely write why each chosen applicant skill is important for the job summary.
-- Explain in great detail why the applicants skills match the job description.
+- For each paragraph, use 2 relevant quantifieable metrics from the provided resume that align with the tops skills outlined in the job summary.
+- Explicitely write why each chosen applicant skill aligns with the job summary.
 - Output the conclusion as a single paragraph at the end.
 - Ensure the entire length is around 250 words.
 - Heavily prioritize unique descriptors and unconventional writing style.
@@ -196,6 +195,58 @@ messages=[
 body = response.choices[0].message.content
 print(body)
 
+###########################################################################
+
+# Your entire prompt for the agent
+prompt = dedent(f'''
+Analyze the provided cover letter hook and body and compare them against the provided resume. 
+Identify any statements in the cover letter that are inconsistent with, or not supported by, the details in the resume. 
+Report any discrepancies found.
+
+Hook: {hook}
+Body: {body}
+Resume: {resume}
+
+expected_output:
+A detailed analysis on all details wihtin the cover letter that are not supported by the information in the resume.
+''')
+
+# API call (using the Chat Completions API)
+response = client.chat.completions.create(model=model_name,  # Or another suitable model
+messages=[
+    {"role": "system", "content": "You are a meticulous, detail-oriented, and impartial editor that is not swayed by persuasive language but focuses solely on factual alignment."},
+    {"role": "user", "content": prompt}
+])
+# Get the assistant's response and store it in a variable
+truth_analysis = response.choices[0].message.content
+print(truth_analysis)
+
+###########################################################################
+
+# Your entire prompt for the agent
+prompt = dedent(f'''
+Rewrite the provided cover letter using the comments from the fact analysis.
+ONLY make changes to elements that are factually incorrect while preserving the original content.
+
+Resume: 
+{hook}
+{body}
+Fact analysis: {truth_analysis}
+
+expected_output:
+A full revised version of the cover letter with only factually incorrect elements corrected.
+''')
+
+# API call (using the Chat Completions API)
+response = client.chat.completions.create(model=model_name,  # Or another suitable model
+messages=[
+    {"role": "system", "content": "You are an expert cover letter writer with a comprehensive understanding of Applicant Tracking Systems (ATS) and keyword optimization."},
+    {"role": "user", "content": prompt}
+])
+# Get the assistant's response and store it in a variable
+full_cover_letter = response.choices[0].message.content
+print(full_cover_letter)
+
 def export_to_docx(content, filename="cover_letter.docx"):
     """Exports text content to a Word document (.docx)."""
 
@@ -204,5 +255,5 @@ def export_to_docx(content, filename="cover_letter.docx"):
     document.save(filename)
 
 output_file_path = "Finished_cover_letters/cover_letter.docx"
-content = f"Dear Hiring Manager,\n\n{hook}\n\n{body}\n\nSincerely\nColton Robbins"
+content = f"Dear Hiring Manager,\n\n{full_cover_letter}\n\nSincerely\nColton Robbins"
 export_to_docx(content, output_file_path)
