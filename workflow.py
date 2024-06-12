@@ -6,6 +6,25 @@ from textwrap import dedent
 import docx
 from docx import Document
 
+from fuzzywuzzy import fuzz
+
+def fuzzy_split(text, pattern, threshold=50):
+    """Splits text based on fuzzy matching with a given pattern."""
+
+    # Find the index with the highest similarity score above the threshold
+    best_match_index = max(
+        range(len(text)),
+        key=lambda i: fuzz.partial_ratio(text[i : i + len(pattern)], pattern)
+    )
+
+    if fuzz.partial_ratio(text[best_match_index : best_match_index + len(pattern)], pattern) > threshold:
+        return [
+            text[:best_match_index],
+            text[best_match_index + len(pattern) :],
+        ]
+    else:
+        return [text]  # No match found above the threshold
+
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 model_name = 'gpt-4o'
@@ -31,7 +50,7 @@ prompt = dedent(f'''
 
 Populate a JSON file based on information from the provided job listing.
 
-job listing: {job_listing}
+Job listing: {job_listing}
 
 expected_output:
 A JSON-like output with the following information:
@@ -99,7 +118,18 @@ messages=[
 ])
 # Get the assistant's response and store it in a variable
 resume_summary = response.choices[0].message.content
-print(resume_summary) 
+print(resume_summary)
+
+pattern = "Previous work experience"
+split_parts = fuzzy_split(resume_summary, pattern, threshold=50)
+
+if len(split_parts) == 2:  
+    contact_info = split_parts[0].strip()
+    resume_summary = split_parts[1].strip()
+    print('########################### Contact info split successful#########################\n\n')
+else:
+    # Handle the case where the pattern isn't found or doesn't meet the threshold
+    print("Pattern not found or similarity too low.")
 
 ###########################################################################
 
@@ -107,16 +137,15 @@ print(resume_summary)
 prompt = dedent(f'''
 Using the provided job summary and resume details, write a compelling opening paragraph (hook) for the cover letter. The hook should:
 - Be less than 100 words.
-- Highlight the client's experience and qualifications.
-- Demonstrate empathy for the most important day-to-day challenge faced in this role. 
+- Directly address why the candidate is perfect for the most important day-to-day challenge stated in the job summary.
 - Use keywords that will resonate with ATS scans.
 - Incorporate total years experience from the applicant if it appears in the resume.
 
-resume_details: {resume_summary}
-job_summary: {job_summary}
+Resume details: {resume_summary}
+Job summary: {job_summary}
 
 expected_output: >
-An attention-grabbing cover letter hook (less than 100 words) that addresses why the candidate is well equiped for the most important day-to-day challenge for this role.
+An attention-grabbing cover letter hook (less than 100 words).
 The hook should start with:
 
 I was thrilled to see your listing for [role mentioned above], because it is exactly the job I've been looking for."
@@ -132,7 +161,7 @@ messages=[
 ])
 # Get the assistant's response and store it in a variable
 hook = response.choices[0].message.content
-print(hook) 
+print(hook + '\n') 
 
 ###########################################################################
 
@@ -141,20 +170,19 @@ prompt = dedent(f'''
 Based on the provided hook, resume details, and job summary write a cover letter body and conclusion with a strong focus on the company's future needs and how the applicant can fulfill those needs.
 
 - Output the body as two paragraphs.
+- For each paragraph, use 1-2 relevant quantifieable metrics from the provided resume that align with the tops skills outlined in the job summary.
+- Explicitely write why each chosen applicant skill is important for the job summary.
+- Explain in great detail why the applicants skills match the job description.
 - Output the conclusion as a single paragraph at the end.
 - Ensure the entire length is around 250 words.
-- Use relevant and specific accomplishments from the provided resume amd explicitely state why they are critically important for the future of the company.
-- All details should heavily focus on why the applicants skills will be beneficial to the future of the company.
 - Heavily prioritize unique descriptors and unconventional writing style.
 
-resume_details: {resume_summary}
-job_summary: {job_summary}
-hook: {hook}
+Resume details: {resume_summary}
+Job summary: {job_summary}
+Hook: {hook}
 
 expected_output:
-A cover letter body and conclusion with a strong focus on the company's future needs and how the applicant can fulfill those needs.
-Do not include explanations, reasoning, or additional commentary.
-
+2 paragraph cover letter body and 1 paragraph conclusion with a strong focus on the company's future needs and how the applicant can fulfill those needs.
 Do not include explanations, reasoning, or additional commentary.
 ''')
 
@@ -175,6 +203,6 @@ def export_to_docx(content, filename="cover_letter.docx"):
     document.add_paragraph(content)
     document.save(filename)
 
-output_file_path = "Finished_cover_letters\cover_letter.docx"
+output_file_path = "Finished_cover_letters/cover_letter.docx"
 content = f"Dear Hiring Manager,\n\n{hook}\n\n{body}\n\nSincerely\nColton Robbins"
 export_to_docx(content, output_file_path)

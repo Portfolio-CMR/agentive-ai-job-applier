@@ -109,7 +109,6 @@ class CoverLetterCrew:
 
         body_task = body(self, job_output=job_result, resume_output=resume_result, hook_output=hook_result)
 
-
         return Crew(
             agents=[self.job_summarizer(), self.resume_summarizer(), self.writer()],
             tasks=[job_task, resume_task, hook_task, body_task],
