@@ -1,3 +1,7 @@
+#TODO: 
+# 1) Add a bot that connects to google api document generator and uses contact informatation
+# 2) 
+
 from openai import OpenAI
 import os
 
@@ -219,7 +223,7 @@ messages=[
 ])
 # Get the assistant's response and store it in a variable
 truth_analysis = response.choices[0].message.content
-print(truth_analysis)
+print(truth_analysis + '\n\n')
 
 ###########################################################################
 
@@ -235,6 +239,7 @@ Fact analysis: {truth_analysis}
 
 expected_output:
 A full revised version of the cover letter with only factually incorrect elements corrected.
+Do not include explanations, reasoning, or additional commentary.
 ''')
 
 # API call (using the Chat Completions API)
