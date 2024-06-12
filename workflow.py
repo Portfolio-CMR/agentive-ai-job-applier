@@ -65,6 +65,9 @@ The most important day-to-day challenge for this role:
 Skill 1:
 Skill 2:
 Skill 3:
+Skill 4:
+Skill 5:
+Skill 6:
 
 Do not include explanations, reasoning, or additional commentary.
 ''')
@@ -171,13 +174,16 @@ print(hook + '\n')
 
 # Your entire prompt for the agent
 prompt = dedent(f'''
-Based on the provided hook, resume details, and job summary write a cover letter body and conclusion with a strong focus on the company's future needs and how the applicant can fulfill those needs.
+Based on the provided hook, resume details, and job summary write a cover letter body with a strong focus on the company's future needs and how the applicant can fulfill those needs.
 
-- Output the body as two paragraphs.
-- For each paragraph, use 2 relevant quantifieable metrics from the provided resume that align with the tops skills outlined in the job summary.
-- Explicitely write why each chosen applicant skill aligns with the job summary.
-- Output the conclusion as a single paragraph at the end.
-- Ensure the entire length is around 250 words.
+Take a deep breath and think through the writing process step by step.
+
+- Output the body as TWO paragraphs.
+- For each paragraph, pick ONE skill from the job summary and do the following:
+1) Choose 2 relevant quantifieable metrics that directly address the ONE skill from the job summary.
+2) Explicitely write why each quantifiable metric aligns with the chosen job summary skill.
+
+- Ensure the entire length is around 200 words.
 - Heavily prioritize unique descriptors and unconventional writing style.
 
 Resume details: {resume_summary}
@@ -185,7 +191,8 @@ Job summary: {job_summary}
 Hook: {hook}
 
 expected_output:
-2 paragraph cover letter body and 1 paragraph conclusion with a strong focus on the company's future needs and how the applicant can fulfill those needs.
+2 paragraph cover letter body with a strong focus on the company's future needs and how the applicant can fulfill those needs.
+DO NOT output the provided hook.
 Do not include explanations, reasoning, or additional commentary.
 ''')
 
@@ -197,7 +204,38 @@ messages=[
 ])
 # Get the assistant's response and store it in a variable
 body = response.choices[0].message.content
-print(body)
+print(body + '\n\n')
+
+###########################################################################
+
+# Your entire prompt for the agent
+prompt = dedent(f'''
+Based on the provided cover letter hook and body, write a conclusion paragraph that summarizes why the applicant is a great fit for the job.
+
+- Output the conclusion as ONE paragraph.
+- Summarize why the applicant's strengths align with the job requirements.
+- Include a call to action at the end of the paragraph.
+- Ensure the entire length is under 75 words.
+- Heavily prioritize unique descriptors and unconventional writing style.
+
+Hook: {hook}
+Body: {body}
+
+expected_output:
+1 paragraph cover letter conclusion.
+DO NOT output the provided hook or body.
+Do not include explanations, reasoning, or additional commentary.
+''')
+
+# API call (using the Chat Completions API)
+response = client.chat.completions.create(model=model_name,  # Or another suitable model
+messages=[
+    {"role": "system", "content": "You are an expert cover letter writer with a comprehensive understanding of Applicant Tracking Systems (ATS) and keyword optimization."},
+    {"role": "user", "content": prompt}
+])
+# Get the assistant's response and store it in a variable
+conclusion = response.choices[0].message.content
+print(conclusion + '\n\n')
 
 ###########################################################################
 
@@ -209,10 +247,11 @@ Report any discrepancies found.
 
 Hook: {hook}
 Body: {body}
+Conclusion : {conclusion}
 Resume: {resume}
 
 expected_output:
-A detailed analysis on all details wihtin the cover letter that are not supported by the information in the resume.
+A detailed analysis on details within the cover letter that are not supported by the information in the resume.
 ''')
 
 # API call (using the Chat Completions API)
@@ -230,11 +269,12 @@ print(truth_analysis + '\n\n')
 # Your entire prompt for the agent
 prompt = dedent(f'''
 Rewrite the provided cover letter using the comments from the fact analysis.
-ONLY make changes to elements that are factually incorrect while preserving the original content.
+ONLY make changes to elements that are factually incorrect while preserving the original content as much as possible.
 
 Resume: 
 {hook}
 {body}
+{conclusion}
 Fact analysis: {truth_analysis}
 
 expected_output:
