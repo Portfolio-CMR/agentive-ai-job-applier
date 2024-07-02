@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "agentive-ai-job-applier"
+version = "0.1.0"
+description = ""
+authors = ["coltonrobbins73 <coltonrobbins73@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "^1.35.7"
+python-docx = "^1.1.2"
+fuzzywuzzy = "^0.18.0"
+python-dotenv = "^1.0.1"
+requests = "^2.32.3"
+beautifulsoup4 = "^4.12.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
