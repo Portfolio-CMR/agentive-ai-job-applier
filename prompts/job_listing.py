@@ -2,7 +2,7 @@ import textwrap
 
 def summarize_job(job_listing: str) -> str:
     return textwrap.dedent(f"""
-        Populate a JSON file based on information from the provided job listing.
+        Populate a JSON file based on information from the provided job listing. For each required skill provide a detailed response.
 
         Job listing: {job_listing}
 
