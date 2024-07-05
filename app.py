@@ -37,47 +37,50 @@ async def generate_letter(url: str, model: str) -> Any:
     resume_prompt = summarize_resume(resume)
 
     Model = gpt if model == 'gpt' else gemini
+    sys_role = 'system' if model == 'gpt' else 'assistant'
 
     job_summary, resume_summary = await asyncio.gather(
         Model([
-            Message(role="system", content=talent_acquisition_expert_persona),
+            Message(role=sys_role, content=talent_acquisition_expert_persona),
             Message(role="user", content=job_listing_prompt)
         ]),
         Model([
-            Message(role="system", content=talent_acquisition_expert_persona),
+            Message(role=sys_role, content=talent_acquisition_expert_persona),
             Message(role="user", content=resume_prompt)
         ])
     )
     print(job_summary)
     hook = await Model([
-        Message(role="system", content=cover_letter_writer_persona),
+        Message(role=sys_role, content=cover_letter_writer_persona),
         Message(role="user", content=gen_hook(resume_summary, job_summary))
     ])
     print(hook)
     body = await Model([
-        Message(role="system", content=cover_letter_writer_persona),
+        Message(role=sys_role, content=cover_letter_writer_persona),
         Message(role="user", content=gen_body(resume_summary, job_summary, hook))
     ])
-
+    print(body)
     revised_body = await Model([
-        Message(role="system", content=cover_letter_writer_persona),
+        Message(role=sys_role, content=cover_letter_writer_persona),
         Message(role="user", content=gen_body_review(resume_summary, job_summary, body))
     ])
-
+    print(revised_body)
     conclusion = await Model([
-        Message(role="system", content=cover_letter_writer_persona),
+        Message(role=sys_role, content=cover_letter_writer_persona),
         Message(role="user", content=gen_conclusion(hook, revised_body))
     ])
-
+    print(conclusion)
     final = await Model([
-        Message(role="system", content=cover_letter_writer_persona),
+        Message(role=sys_role, content=cover_letter_writer_persona),
         Message(role="user", content=gen_truth_check(resume_summary, hook, revised_body, conclusion))
     ])
     print(final)
     job_details = extract_info_fuzzy(job_summary)
-    string_to_word_doc(final, f'secure/finished/{job_details}.docx')
+    role = [item for index, item in enumerate(job_details.items())][0][1]
+    company = [item for index, item in enumerate(job_details.items())][1][1]
+    string_to_word_doc(final, f'secure/finished/{role}_{company}.docx')
 
 asyncio.run(generate_letter(
-    'https://www.linkedin.com/jobs/view/data-analyst-3-at-nextant-3948735156/?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic',
-    'gpt'
+'https://www.dataanalyst.com/job/data-analyst-75b50',
+    'gemini'
 ))

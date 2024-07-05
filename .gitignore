@@ -1,6 +1,6 @@
 .env
-Finished_cover_letters/*
 Materials/*
 jobposting-api
 db
 __pycache__
+secure/*
